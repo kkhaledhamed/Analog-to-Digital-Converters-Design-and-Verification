@@ -81,11 +81,11 @@ The system performance was evaluated using several key metrics:
 
 ## Contributors
 
-### Khaled Ahmed Hamed
+- Khaled Ahmed Hamed
 
-### Supervised by Dr. Hesham Omran
+- Supervised by Dr. Hesham Omran
 
-License
+## License
 
-### Siemens ADCs Training
+Siemens ADCs Training
 
