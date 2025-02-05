@@ -1,0 +1,29 @@
+** sch_path: /home/tare/Desktop/sar_adc/dff.sch
+**.subckt dff D CLK SET RESET Q QB
+*.ipin D
+*.opin Q
+*.ipin CLK
+*.ipin SET
+*.ipin RESET
+*.opin QB
+**** begin user architecture code
+
+
+*nor model
+a1 D CLK SET RESET OUT OUTI my_dff
+.model my_dff d_dff(clk_delay = 1e-9 set_delay = 1.0e-9
++                  reset_delay = 1.0e-9 ic = 2 rise_delay = 1.0e-9
++                  fall_delay = 1e-9)
+
+*force netlisting of digital outputs
+v1 OUT Q 0
+v2 OUTI QB 0
+
+
+
+.include /home/tare/pdk/gf180mcuC/libs.tech/ngspice/design.ngspice
+.lib /home/tare/pdk/gf180mcuC/libs.tech/ngspice/sm141064.ngspice typical
+
+**** end user architecture code
+**.ends
+.end

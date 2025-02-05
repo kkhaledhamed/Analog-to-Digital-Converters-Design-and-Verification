@@ -1,0 +1,241 @@
+** sch_path: /home/tare/Desktop/sar_adc/sar_adc.sch
+**.subckt sar_adc VCM AGND VREFP VREFN AVDD CLK EOC DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0 SMPL
+*.ipin VIN
+*.ipin SMPL
+*.ipin CLK
+*.iopin VREFN
+*.iopin VREFP
+*.iopin AVDD
+*.iopin AGND
+*.iopin VCM
+*.opin DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0
+*.opin EOC
+x1 AVDD VREFP VDAC VREFN AGND VIN SMPL_D SMPL_B_D DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 VREFN CAP_DAC
+x2 CMP CLK SMPL DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 DW_B7 DW_B6 DW_B5 DW_B4 DW_B3 DW_B2 DW_B1 DW_B0 EOC sar_logic
+x3 SMPL AGND VDAC VCM AVDD tg
+x4 CMP VCM net1 VDAC comperator
+x5 SMPL_B SMPL inv
+x6 SMPL_D SMPL_B inv
+x7 SMPL_B_D SMPL_D inv
+* noconn #net1
+* noconn DW_B[7..0]
+**.ends
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/CAP_DAC.sym # of pins=10
+** sym_path: /home/tare/Desktop/sar_adc/CAP_DAC.sym
+** sch_path: /home/tare/Desktop/sar_adc/CAP_DAC.sch
+.subckt CAP_DAC AGND AVDD VREFP VREFN VDAC VIN SMPL SMPL_B DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 DW_D
+*.ipin VIN
+*.ipin SMPL
+*.ipin SMPL_B
+*.ipin DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0
+*.ipin DW_D
+*.opin VDAC
+*.iopin VREFN
+*.iopin VREFP
+*.iopin AVDD
+*.iopin AGND
+C0 VDAC VBOT_D 1f m=1
+C1 VDAC VBOT0 1f m=1
+C2 VDAC VBOT1 1f m=2
+C3 VDAC VBOT2 1f m=4
+C4 VDAC VBOT3 1f m=8
+C5 VDAC VBOT4 1f m=16
+C6 VDAC VBOT5 1f m=32
+C7 VDAC VBOT6 1f m=64
+C8 VDAC VBOT7 1f m=128
+x1 SMPL VIN DW7 VREFN AGND bottom-plate_S
+x2 SMPL VIN DW7 VREFN AGND bottom-plate_S
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/sar_logic.sym # of pins=6
+** sym_path: /home/tare/Desktop/sar_adc/sar_logic.sym
+** sch_path: /home/tare/Desktop/sar_adc/sar_logic.sch
+.subckt sar_logic CMP CLK RST DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 DW_B7 DW_B6 DW_B5 DW_B4 DW_B3 DW_B2 DW_B1 DW_B0 EOC
+*.ipin CMP
+*.opin DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0
+*.ipin CLK
+*.ipin RST
+*.opin DW_B7,DW_B6,DW_B5,DW_B4,DW_B3,DW_B2,DW_B1,DW_B0
+*.opin EOC
+**** begin user architecture code
+
+
+V1 VLOW 0 0
+
+
+**** end user architecture code
+xRING_CNT8 VLOW CLK RST VLOW QCNT8 Q_B8 dff
+xRING_CNT7 QCNT8 CLK VLOW RST QCNT7 Q_B7 dff
+xRING_CNT6 QCNT7 CLK VLOW RST QCNT6 Q_B6 dff
+xRING_CNT5 QCNT6 CLK VLOW RST QCNT5 Q_B5 dff
+xRING_CNT4 QCNT5 CLK VLOW RST QCNT4 Q_B4 dff
+xRING_CNT3 QCNT4 CLK VLOW RST QCNT3 Q_B3 dff
+xRING_CNT2 QCNT3 CLK VLOW RST QCNT2 Q_B2 dff
+xRING_CNT1 QCNT2 CLK VLOW RST QCNT1 Q_B1 dff
+xRING_CNT0 QCNT1 CLK VLOW RST QCNT0 Q_B0 dff
+xCODE_REG7 CMP DW6 QCNT8 VLOW DW7 DW_B7 dff
+xCODE_REG6 CMP DW5 QCNT7 RST DW6 DW_B6 dff
+xCODE_REG5 CMP DW4 QCNT6 RST DW5 DW_B5 dff
+xCODE_REG4 CMP DW3 QCNT5 RST DW4 DW_B4 dff
+xCODE_REG3 CMP DW2 QCNT4 RST DW3 DW_B3 dff
+xCODE_REG2 CMP DW1 QCNT3 RST DW2 DW_B2 dff
+xCODE_REG1 CMP DW0 QCNT2 RST DW1 DW_B1 dff
+xCODE_REG0 CMP EOC QCNT1 RST DW0 DW_B0 dff
+x3 VLOW VLOW QCNT0 RST EOC net1 dff
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/tg.sym # of pins=5
+** sym_path: /home/tare/Desktop/sar_adc/tg.sym
+** sch_path: /home/tare/Desktop/sar_adc/tg.sch
+.subckt tg EN AGND VOUT VIN AVDD
+*.iopin AGND
+*.iopin AVDD
+*.iopin VOUT
+*.iopin VIN
+*.iopin EN
+XM1 VOUT EN VIN AGND nmos_3p3 L=0.28u W=5u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+XM2 VOUT ENB VIN AVDD pmos_3p3 L=0.28u W=10u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+E1 ENB AVDD EN AGND 1
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/comperator.sym # of pins=4
+** sym_path: /home/tare/Desktop/sar_adc/comperator.sym
+** sch_path: /home/tare/Desktop/sar_adc/comperator.sch
+.subckt comperator VOUTP VINP VOUTN VINN
+*.ipin VINP
+*.opin VOUTP
+*.ipin VINN
+*.opin VOUTN
+V1 VINPi VINP 0
+V2 VINNi VINN 0
+B2 VOUTN GND V = {VCC/2 + VCC/2 *(tanh(V(VINPi,VINNi)*1e6*-1))}
+B1 VOUTP GND V = {VCC/2 + VCC/2 *(tanh(V(VINPi,VINNi)*1e6))}
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/inv.sym # of pins=2
+** sym_path: /home/tare/Desktop/sar_adc/inv.sym
+** sch_path: /home/tare/Desktop/sar_adc/inv.sch
+.subckt inv Y A
+*.ipin A
+*.opin Y
+**** begin user architecture code
+
+
+*inverter model
+a1 A Yi my_inv
+.model my_inv d_inverter(rise_delay = 1e-9 fall_delay = 1e-9
++                        input_load = 1e-12)
+
+*force netlisting of digital outputs
+v1 Yi Y 0
+
+
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/bottom-plate_S.sym # of pins=9
+** sym_path: /home/tare/Desktop/sar_adc/bottom-plate_S.sym
+** sch_path: /home/tare/Desktop/sar_adc/bottom-plate_S.sch
+.subckt bottom-plate_S VBOT AVDD AGND VREFP VREFN
+*.iopin VBOT
+*.iopin VREFN
+*.iopin VREFP
+*.iopin AVDD
+*.iopin AGND
+*.iopin DB
+*.iopin SMPL
+*.iopin SMPL_B
+*.iopin VIN
+XM1 VBOT VREFN_C VREFN AGND nmos_3p3 L=0.28u W=0.22u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+XM2 VREFP VREFN_C_B VBOT AVDD pmos_3p3 L=0.28u W=0.22u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+x1 VREFN_C DB SMPL nor
+x2 VREFN_C_B DB SMPL_B nand
+x3 SMPL AGND VBOT VIN AVDD tg
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/dff.sym # of pins=6
+** sym_path: /home/tare/Desktop/sar_adc/dff.sym
+** sch_path: /home/tare/Desktop/sar_adc/dff.sch
+.subckt dff D CLK SET RESET Q QB
+*.ipin D
+*.opin Q
+*.ipin CLK
+*.ipin SET
+*.ipin RESET
+*.opin QB
+**** begin user architecture code
+
+
+*nor model
+a1 D CLK SET RESET OUT OUTI my_dff
+.model my_dff d_dff(clk_delay = 1e-9 set_delay = 1.0e-9
++                  reset_delay = 1.0e-9 ic = 2 rise_delay = 1.0e-9
++                  fall_delay = 1e-9)
+
+*force netlisting of digital outputs
+v1 OUT Q 0
+v2 OUTI QB 0
+
+
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/nor.sym # of pins=3
+** sym_path: /home/tare/Desktop/sar_adc/nor.sym
+** sch_path: /home/tare/Desktop/sar_adc/nor.sch
+.subckt nor Y A B
+*.ipin A
+*.opin Y
+*.ipin B
+**** begin user architecture code
+
+
+*nor model
+a1 [A b] Yi my_nor
+.model my_nor d_nor(rise_delay = 1e-9 fall_delay = 1e-9
++                        input_load = 1e-12)
+
+*force netlisting of digital outputs
+v1 Yi Y 0
+
+
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/nand.sym # of pins=3
+** sym_path: /home/tare/Desktop/sar_adc/nand.sym
+** sch_path: /home/tare/Desktop/sar_adc/nand.sch
+.subckt nand Y A B
+*.ipin A
+*.opin Y
+*.ipin B
+**** begin user architecture code
+
+
+*nand model
+a1 [A b] Yi my_nand
+.model my_nand d_nand(rise_delay = 1e-9 fall_delay = 1e-9
++                        input_load = 1e-12)
+
+*force netlisting of digital outputs
+v1 Yi Y 0
+
+
+**** end user architecture code
+.ends
+
+.GLOBAL GND
+.end

@@ -1,0 +1,340 @@
+** sch_path: /home/tare/Desktop/ISA/final.sch
+**.subckt final
+S1 net1 VSAR EOC VMID SWITCH1
+S2 VSAH net1 VMID CLK SWITCH1
+C1 VSAH GND 1p m=1
+V1 VIN GND {VIN_DC}
+V2 net2 GND sin({VDC} {VPK} {FIN})
+V3 VDD GND {VDD}
+V4 VMID GND {VDD/2}
+V5 VREFN GND {VREFN}
+V6 VREFP GND {VREFP}
+V7 VCM GND {VCM}
+V8 CLK GND pulse(0 VDD {TCLK/2} TRF TRF {TCLK/2} {TCLK})
+V9 SMPL GND pulse(0 VDD {TCLK/2 + TCLK/4} TRF TRF {TCLK} TS)
+x2 GND VDD CLK VIN VREFP VREFN SMPL EOC VCM DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 sardac
+x1 VREFP VDD VSAR DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 GND GND VREFN DAC_10
+* noconn EOC
+**** begin user architecture code
+
+.include /home/tare/pdk/gf180mcuC/libs.tech/ngspice/design.ngspice
+.lib /home/tare/pdk/gf180mcuC/libs.tech/ngspice/sm141064.ngspice typical
+
+
+
+* ngspice commands
+*Required model for the switch (the switch threshold default value is zero)
+* you can define the threshold using vt={VDD/2} (not needed here)
+.model SWITCH1 sw
+*These are the values of the parameters to be used
+.param TS=1u TCLK=100n TRF=1n TDROP={0.5/FIN} TSTOP={(NCYC/FIN)+TDROP}
+.param NCYC=5 NFFT=256 FIN={(NCYC/NFFT)/TS}
+.param VDD=3 VDC={1} VCM={1} VPK={0.5} VREFP={VCM+VPK} VREFN={VCM-VPK}
+.param VCC=VDD
+.param VIN_DC={VREFN}
+*.param VIN_DC={VREFP}
+*.param VIN_DC= {VREFN +(128+32+8+2+0.5)*2*VPK/(2**8)}
+*Analysis setup and control statements
+*.tran 1n {TSTOP} {TDROP}
+.tran 1n {2*TS}
+*save all voltages and currents
+.save all
+*options for an accurate precision output
+*.options reltol=1e-6 vntol=1u abstol=1p
+* option to make output file ascii
+*.options filetype=ascii
+
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/sardac.sym # of pins=10
+** sym_path: /home/tare/Desktop/Final_1/sardac.sym
+** sch_path: /home/tare/Desktop/Final_1/sardac.sch
+.subckt sardac AGND AVDD CLK VIN VREFP VREFN SMPL EOC VCM DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0
+*.iopin AGND
+*.iopin AVDD
+*.iopin VREFP
+*.iopin VREFN
+*.iopin VCM
+*.ipin VIN
+*.ipin SMPL
+*.ipin CLK
+*.opin EOC
+*.opin DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0
+* noconn DW_B[7..0]
+* noconn #net1
+x8 CMP CLK SMPL DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 DW_B7 DW_B6 DW_B5 DW_B4 DW_B3 DW_B2 DW_B1 DW_B0 EOC sar_logic
+x1 AVDD AGND VREFP VREFN VIN SMPL_B_D SMPL_D VDAC DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 VREFN capdac
+x2 CMP VCM net1 VDAC comperator
+x3 SMPL AGND VDAC VCM AVDD tg
+x4 SMPL_B SMPL inv
+x5 SMPL_D SMPL_B inv
+x6 SMPL_B_D SMPL_D inv
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/DAC_10.sym # of pins=5
+** sym_path: /home/tare/Desktop/Final_1/DAC_10.sym
+** sch_path: /home/tare/Desktop/Final_1/DAC_10.sch
+.subckt DAC_10 VREFP VDD VOUT B9 B8 B7 B6 B5 B4 B3 B2 B1 B0 VREFN
+*.iopin B9,B8,B7,B6,B5,B4,B3,B2,B1,B0
+*.iopin VREFP
+*.iopin VREFN
+*.iopin VOUT
+*.iopin VDD
+x19 VDD BO9 B9 Bitlogic
+x18 VDD BO8 B8 Bitlogic
+x17 VDD BO7 B7 Bitlogic
+x16 VDD BO6 B6 Bitlogic
+x15 VDD BO5 B5 Bitlogic
+x14 VDD BO4 B4 Bitlogic
+x13 VDD BO3 B3 Bitlogic
+x12 VDD BO2 B2 Bitlogic
+x11 VDD BO1 B1 Bitlogic
+x10 VDD BO0 B0 Bitlogic
+B1 VOUT GND
++ v=(512*v(BO9)+256*v(BO8)+128*v(BO7)+64*v(BO6)+32*v(BO5)+16*v(BO4)+8*v(BO3)+4*v(BO2)+2*v(BO1)+v(BO0))*((v(VREFP)-v(VREFN))/1024)+v(VREFN)
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/sar_logic.sym # of pins=6
+** sym_path: /home/tare/Desktop/Final_1/sar_logic.sym
+** sch_path: /home/tare/Desktop/Final_1/sar_logic.sch
+.subckt sar_logic CMP CLK RST DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 DW_B7 DW_B6 DW_B5 DW_B4 DW_B3 DW_B2 DW_B1 DW_B0 EOC
+*.ipin CMP
+*.opin DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0
+*.ipin CLK
+*.ipin RST
+*.opin DW_B7,DW_B6,DW_B5,DW_B4,DW_B3,DW_B2,DW_B1,DW_B0
+*.opin EOC
+**** begin user architecture code
+
+
+V1 VLOW 0 0
+
+
+**** end user architecture code
+xRING_CNT8 VLOW CLK RST VLOW QCNT8 Q_B8 dff
+xRING_CNT7 QCNT8 CLK VLOW RST QCNT7 Q_B7 dff
+xRING_CNT6 QCNT7 CLK VLOW RST QCNT6 Q_B6 dff
+xRING_CNT5 QCNT6 CLK VLOW RST QCNT5 Q_B5 dff
+xRING_CNT4 QCNT5 CLK VLOW RST QCNT4 Q_B4 dff
+xRING_CNT3 QCNT4 CLK VLOW RST QCNT3 Q_B3 dff
+xRING_CNT2 QCNT3 CLK VLOW RST QCNT2 Q_B2 dff
+xRING_CNT1 QCNT2 CLK VLOW RST QCNT1 Q_B1 dff
+xRING_CNT0 QCNT1 CLK VLOW RST QCNT0 Q_B0 dff
+xCODE_REG7 CMP DW6 QCNT8 VLOW DW7 DW_B7 dff
+xCODE_REG6 CMP DW5 QCNT7 RST DW6 DW_B6 dff
+xCODE_REG5 CMP DW4 QCNT6 RST DW5 DW_B5 dff
+xCODE_REG4 CMP DW3 QCNT5 RST DW4 DW_B4 dff
+xCODE_REG3 CMP DW2 QCNT4 RST DW3 DW_B3 dff
+xCODE_REG2 CMP DW1 QCNT3 RST DW2 DW_B2 dff
+xCODE_REG1 CMP DW0 QCNT2 RST DW1 DW_B1 dff
+xCODE_REG0 CMP EOC QCNT1 RST DW0 DW_B0 dff
+x3 VLOW VLOW QCNT0 RST EOC net1 dff
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/capdac.sym # of pins=10
+** sym_path: /home/tare/Desktop/Final_1/capdac.sym
+** sch_path: /home/tare/Desktop/Final_1/capdac.sch
+.subckt capdac AVDD AGND VREFP VREFN VIN SMPL_B SMPL VDAC DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 DW_D
+*.iopin AGND
+*.iopin AVDD
+*.iopin VREFP
+*.iopin VREFN
+*.ipin VIN
+*.ipin SMPL_B
+*.ipin SMPL
+*.opin VDAC
+*.ipin DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0
+*.ipin DW_D
+C1 VDAC VBOT_D 1f m=1
+C2 VDAC VBOT0 1f m=1
+C3 VDAC VBOT1 1f m=2
+C4 VDAC VBOT2 1f m=4
+C5 VDAC VBOT3 1f m=8
+C6 VDAC VBOT4 1f m=16
+C7 VDAC VBOT5 1f m=32
+C8 VDAC VBOT6 1f m=64
+C9 VDAC VBOT7 1f m=128
+x17 AVDD AGND VREFP VREFN VBOT7 DW7 SMPL_B VIN SMPL bps
+x16 AVDD AGND VREFP VREFN VBOT6 DW6 SMPL_B VIN SMPL bps
+x15 AVDD AGND VREFP VREFN VBOT5 DW5 SMPL_B VIN SMPL bps
+x14 AVDD AGND VREFP VREFN VBOT4 DW4 SMPL_B VIN SMPL bps
+x13 AVDD AGND VREFP VREFN VBOT3 DW3 SMPL_B VIN SMPL bps
+x12 AVDD AGND VREFP VREFN VBOT2 DW2 SMPL_B VIN SMPL bps
+x11 AVDD AGND VREFP VREFN VBOT1 DW1 SMPL_B VIN SMPL bps
+x10 AVDD AGND VREFP VREFN VBOT0 DW0 SMPL_B VIN SMPL bps
+x2 AVDD AGND VREFP VREFN VBOT_D DW_D SMPL_B VIN SMPL bps
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/comperator.sym # of pins=4
+** sym_path: /home/tare/Desktop/Final_1/comperator.sym
+** sch_path: /home/tare/Desktop/Final_1/comperator.sch
+.subckt comperator VOUTP VINP VOUTN VINN
+*.ipin VINP
+*.opin VOUTP
+*.ipin VINN
+*.opin VOUTN
+V1 VINPi VINP 0
+V2 VINNi VINN 0
+B2 VOUTN GND V = {VCC/2 + VCC/2 *(tanh(V(VINPi,VINNi)*1e6*-1))}
+B1 VOUTP GND V = {VCC/2 + VCC/2 *(tanh(V(VINPi,VINNi)*1e6))}
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/tg.sym # of pins=5
+** sym_path: /home/tare/Desktop/Final_1/tg.sym
+** sch_path: /home/tare/Desktop/Final_1/tg.sch
+.subckt tg EN AGND VOUT VIN AVDD
+*.iopin AGND
+*.iopin AVDD
+*.iopin VOUT
+*.iopin VIN
+*.iopin EN
+XM1 VOUT EN VIN AGND nmos_3p3 L=0.28u W=5u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+XM2 VOUT ENB VIN AVDD pmos_3p3 L=0.28u W=10u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+E1 ENB AVDD EN AGND 1
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/inv.sym # of pins=2
+** sym_path: /home/tare/Desktop/Final_1/inv.sym
+** sch_path: /home/tare/Desktop/Final_1/inv.sch
+.subckt inv Y A
+*.ipin A
+*.opin Y
+**** begin user architecture code
+
+
+*inverter model
+a1 A Yi my_inv
+.model my_inv d_inverter(rise_delay = 1e-9 fall_delay = 1e-9
++                        input_load = 1e-12)
+
+*force netlisting of digital outputs
+v1 Yi Y 0
+
+
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  Bitlogic.sym # of pins=3
+** sym_path: /home/tare/Desktop/ISA/Bitlogic.sym
+** sch_path: /home/tare/Desktop/ISA/Bitlogic.sch
+.subckt Bitlogic VDD BOUT BIN
+*.opin BOUT
+*.ipin BIN
+*.iopin VDD
+V1 ONE GND 1
+S1 ONE BOUT BIN VMID SWITCH1
+S2 BOUT GND VMID BIN SWITCH1
+R1 VMID GND 1meg m=1
+R2 VDD VMID 1meg m=1
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/dff.sym # of pins=6
+** sym_path: /home/tare/Desktop/sar_adc/dff.sym
+** sch_path: /home/tare/Desktop/sar_adc/dff.sch
+.subckt dff D CLK SET RESET Q QB
+*.ipin D
+*.opin Q
+*.ipin CLK
+*.ipin SET
+*.ipin RESET
+*.opin QB
+**** begin user architecture code
+
+
+*nor model
+a1 D CLK SET RESET OUT OUTI my_dff
+.model my_dff d_dff(clk_delay = 1e-9 set_delay = 1.0e-9
++                  reset_delay = 1.0e-9 ic = 2 rise_delay = 1.0e-9
++                  fall_delay = 1e-9)
+
+*force netlisting of digital outputs
+v1 OUT Q 0
+v2 OUTI QB 0
+
+
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/bps.sym # of pins=9
+** sym_path: /home/tare/Desktop/Final_1/bps.sym
+** sch_path: /home/tare/Desktop/Final_1/bps.sch
+.subckt bps AVDD AGND VREFP VREFN VBOT D SMPL_B VIN SMPL
+*.iopin AGND
+*.iopin AVDD
+*.iopin VREFP
+*.iopin VREFN
+*.opin VBOT
+*.ipin VIN
+*.ipin D
+*.ipin SMPL_B
+*.ipin SMPL
+XM1 VBOT net1 VREFN AGND nmos_3p3 L=0.28u W=5u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+XM2 VREFP net2 VBOT AVDD pmos_3p3 L=0.28u W=10u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+x2 net1 D SMPL nor
+x3 net2 D SMPL_B nand
+x1 SMPL AVDD VBOT VIN AGND tg
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/nor.sym # of pins=3
+** sym_path: /home/tare/Desktop/Final_1/nor.sym
+** sch_path: /home/tare/Desktop/Final_1/nor.sch
+.subckt nor Y A B
+*.ipin A
+*.opin Y
+*.ipin B
+**** begin user architecture code
+
+
+*nor model
+a1 [A b] Yi my_nor
+.model my_nor d_nor(rise_delay = 1e-9 fall_delay = 1e-9
++                        input_load = 1e-12)
+
+*force netlisting of digital outputs
+v1 Yi Y 0
+
+
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/Final_1/nand.sym # of pins=3
+** sym_path: /home/tare/Desktop/Final_1/nand.sym
+** sch_path: /home/tare/Desktop/Final_1/nand.sch
+.subckt nand Y A B
+*.ipin A
+*.opin Y
+*.ipin B
+**** begin user architecture code
+
+
+*nand model
+a1 [A b] Yi my_nand
+.model my_nand d_nand(rise_delay = 1e-9 fall_delay = 1e-9
++                        input_load = 1e-12)
+
+*force netlisting of digital outputs
+v1 Yi Y 0
+
+
+**** end user architecture code
+.ends
+
+.GLOBAL GND
+.end

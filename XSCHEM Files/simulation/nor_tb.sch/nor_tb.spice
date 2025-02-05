@@ -1,0 +1,51 @@
+** sch_path: /home/tare/Documents/sar_adc/nor_tb.sch
+**.subckt nor_tb
+V1 A GND pulse(0 VDD 0 TRF TRF {TCLK/2} {TCLK})
+V2 B GND pulse(0 VDD {TCLK/4} TRF TRF {TCLK/2} {TCLK})
+x1 Y A B nor
+**** begin user architecture code
+
+
+*parameters
+.param VDD=2 VCC=VDD
+.param TRF=1n TCLK=100n
+.param TSTOP={4*TCLK} TDROP=0
+
+*analysis setup and control statements
+.tran 1n {TSTOP} {TDROP}
+
+*save all voltages and currents
+.save all
+
+
+
+.include /home/tare/pdk/gf180mcuC/libs.tech/ngspice/design.ngspice
+.lib /home/tare/pdk/gf180mcuC/libs.tech/ngspice/sm141064.ngspice typical
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  /home/tare/Documents/sar_adc/nor.sym # of pins=3
+** sym_path: /home/tare/Documents/sar_adc/nor.sym
+** sch_path: /home/tare/Documents/sar_adc/nor.sch
+.subckt nor Y A B
+*.ipin A
+*.opin Y
+*.ipin B
+**** begin user architecture code
+
+
+*nor model
+a1 [A b] Yi my_nor
+.model my_nor d_nor(rise_delay = 1e-9 fall_delay = 1e-9
++                        input_load = 1e-12)
+
+*force netlisting of digital outputs
+v1 Yi Y 0
+
+
+**** end user architecture code
+.ends
+
+.GLOBAL GND
+.end

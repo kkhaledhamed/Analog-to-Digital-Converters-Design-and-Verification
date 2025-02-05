@@ -1,0 +1,95 @@
+** sch_path: /home/tare/Desktop/sar_adc/sar_logic_tb.sch
+**.subckt sar_logic_tb
+V1 CMP GND pulse(0 VDD 0 TRF TRF {TCLK} {2*TCLK})
+V2 CLK GND pulse(0 VDD {TCLK/4} TRF TRF {TCLK/2} {TCLK})
+V3 RST GND pulse(0 VDD 0 TRF TRF {TCLK} {20*TCLK})
+x1 CMP CLK RST DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 DW_B7 DW_B6 DW_B5 DW_B4 DW_B3 DW_B2 DW_B1 DW_B0 EOC sar_logic
+**** begin user architecture code
+
+
+*parameters
+.param VDD=2 VCC=VDD
+.param TRF=1n TCLK=100n
+.param TSTOP={10*TCLK} TDROP=0
+
+*analysis setup and control statements
+.tran 1n {TSTOP} {TDROP}
+
+*save all voltages and currents
+.save all
+
+
+
+.include /home/tare/pdk/gf180mcuC/libs.tech/ngspice/design.ngspice
+.lib /home/tare/pdk/gf180mcuC/libs.tech/ngspice/sm141064.ngspice typical
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/sar_logic.sym # of pins=6
+** sym_path: /home/tare/Desktop/sar_adc/sar_logic.sym
+** sch_path: /home/tare/Desktop/sar_adc/sar_logic.sch
+.subckt sar_logic CMP CLK RST DW7 DW6 DW5 DW4 DW3 DW2 DW1 DW0 DW_B7 DW_B6 DW_B5 DW_B4 DW_B3 DW_B2 DW_B1 DW_B0 EOC
+*.ipin CMP
+*.opin DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0
+*.ipin CLK
+*.ipin RST
+*.opin DW_B7,DW_B6,DW_B5,DW_B4,DW_B3,DW_B2,DW_B1,DW_B0
+*.opin EOC
+**** begin user architecture code
+
+
+V1 VLOW 0 0
+
+
+**** end user architecture code
+xRING_CNT8 VLOW CLK RST VLOW QCNT8 Q_B8 dff
+xRING_CNT7 QCNT8 CLK VLOW RST QCNT7 Q_B7 dff
+xRING_CNT6 QCNT7 CLK VLOW RST QCNT6 Q_B6 dff
+xRING_CNT5 QCNT6 CLK VLOW RST QCNT5 Q_B5 dff
+xRING_CNT4 QCNT5 CLK VLOW RST QCNT4 Q_B4 dff
+xRING_CNT3 QCNT4 CLK VLOW RST QCNT3 Q_B3 dff
+xRING_CNT2 QCNT3 CLK VLOW RST QCNT2 Q_B2 dff
+xRING_CNT1 QCNT2 CLK VLOW RST QCNT1 Q_B1 dff
+xRING_CNT0 QCNT1 CLK VLOW RST QCNT0 Q_B0 dff
+xCODE_REG7 CMP DW6 QCNT8 VLOW DW7 DW_B7 dff
+xCODE_REG6 CMP DW5 QCNT7 RST DW6 DW_B6 dff
+xCODE_REG5 CMP DW4 QCNT6 RST DW5 DW_B5 dff
+xCODE_REG4 CMP DW3 QCNT5 RST DW4 DW_B4 dff
+xCODE_REG3 CMP DW2 QCNT4 RST DW3 DW_B3 dff
+xCODE_REG2 CMP DW1 QCNT3 RST DW2 DW_B2 dff
+xCODE_REG1 CMP DW0 QCNT2 RST DW1 DW_B1 dff
+xCODE_REG0 CMP EOC QCNT1 RST DW0 DW_B0 dff
+x3 VLOW VLOW QCNT0 RST EOC net1 dff
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/dff.sym # of pins=6
+** sym_path: /home/tare/Desktop/sar_adc/dff.sym
+** sch_path: /home/tare/Desktop/sar_adc/dff.sch
+.subckt dff D CLK SET RESET Q QB
+*.ipin D
+*.opin Q
+*.ipin CLK
+*.ipin SET
+*.ipin RESET
+*.opin QB
+**** begin user architecture code
+
+
+*nor model
+a1 D CLK SET RESET OUT OUTI my_dff
+.model my_dff d_dff(clk_delay = 1e-9 set_delay = 1.0e-9
++                  reset_delay = 1.0e-9 ic = 2 rise_delay = 1.0e-9
++                  fall_delay = 1e-9)
+
+*force netlisting of digital outputs
+v1 OUT Q 0
+v2 OUTI QB 0
+
+
+**** end user architecture code
+.ends
+
+.GLOBAL GND
+.end

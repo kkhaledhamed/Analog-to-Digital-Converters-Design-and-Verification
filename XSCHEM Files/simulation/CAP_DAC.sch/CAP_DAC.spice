@@ -1,0 +1,111 @@
+** sch_path: /home/tare/Desktop/sar_adc/CAP_DAC.sch
+**.subckt CAP_DAC AGND AVDD VREFP VREFN VDAC VIN SMPL SMPL_B DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0 DW_D
+*.ipin VIN
+*.ipin SMPL
+*.ipin SMPL_B
+*.ipin DW7,DW6,DW5,DW4,DW3,DW2,DW1,DW0
+*.ipin DW_D
+*.opin VDAC
+*.iopin VREFN
+*.iopin VREFP
+*.iopin AVDD
+*.iopin AGND
+C0 VDAC VBOT_D 1f m=1
+C1 VDAC VBOT0 1f m=1
+C2 VDAC VBOT1 1f m=2
+C3 VDAC VBOT2 1f m=4
+C4 VDAC VBOT3 1f m=8
+C5 VDAC VBOT4 1f m=16
+C6 VDAC VBOT5 1f m=32
+C7 VDAC VBOT6 1f m=64
+C8 VDAC VBOT7 1f m=128
+x1 SMPL VIN DW7 VREFN AGND bottom-plate_S
+x2 SMPL VIN DW7 VREFN AGND bottom-plate_S
+**.ends
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/bottom-plate_S.sym # of pins=9
+** sym_path: /home/tare/Desktop/sar_adc/bottom-plate_S.sym
+** sch_path: /home/tare/Desktop/sar_adc/bottom-plate_S.sch
+.subckt bottom-plate_S VBOT AVDD AGND VREFP VREFN
+*.iopin VBOT
+*.iopin VREFN
+*.iopin VREFP
+*.iopin AVDD
+*.iopin AGND
+*.iopin DB
+*.iopin SMPL
+*.iopin SMPL_B
+*.iopin VIN
+XM1 VBOT VREFN_C VREFN AGND nmos_3p3 L=0.28u W=0.22u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+XM2 VREFP VREFN_C_B VBOT AVDD pmos_3p3 L=0.28u W=0.22u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+x1 VREFN_C DB SMPL nor
+x2 VREFN_C_B DB SMPL_B nand
+x3 SMPL AGND VBOT VIN AVDD tg
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/nor.sym # of pins=3
+** sym_path: /home/tare/Desktop/sar_adc/nor.sym
+** sch_path: /home/tare/Desktop/sar_adc/nor.sch
+.subckt nor Y A B
+*.ipin A
+*.opin Y
+*.ipin B
+**** begin user architecture code
+
+
+*nor model
+a1 [A b] Yi my_nor
+.model my_nor d_nor(rise_delay = 1e-9 fall_delay = 1e-9
++                        input_load = 1e-12)
+
+*force netlisting of digital outputs
+v1 Yi Y 0
+
+
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/nand.sym # of pins=3
+** sym_path: /home/tare/Desktop/sar_adc/nand.sym
+** sch_path: /home/tare/Desktop/sar_adc/nand.sch
+.subckt nand Y A B
+*.ipin A
+*.opin Y
+*.ipin B
+**** begin user architecture code
+
+
+*nand model
+a1 [A b] Yi my_nand
+.model my_nand d_nand(rise_delay = 1e-9 fall_delay = 1e-9
++                        input_load = 1e-12)
+
+*force netlisting of digital outputs
+v1 Yi Y 0
+
+
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  /home/tare/Desktop/sar_adc/tg.sym # of pins=5
+** sym_path: /home/tare/Desktop/sar_adc/tg.sym
+** sch_path: /home/tare/Desktop/sar_adc/tg.sch
+.subckt tg EN AGND VOUT VIN AVDD
+*.iopin AGND
+*.iopin AVDD
+*.iopin VOUT
+*.iopin VIN
+*.iopin EN
+XM1 VOUT EN VIN AGND nmos_3p3 L=0.28u W=5u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+XM2 VOUT ENB VIN AVDD pmos_3p3 L=0.28u W=10u nf=1 ad='int((nf+1)/2) * W/nf * 0.18u' as='int((nf+2)/2) * W/nf * 0.18u' pd='2*int((nf+1)/2) * (W/nf + 0.18u)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.18u)' nrd='0.18u / W' nrs='0.18u / W' sa=0 sb=0 sd=0 m=1
+E1 ENB AVDD EN AGND 1
+.ends
+
+.end

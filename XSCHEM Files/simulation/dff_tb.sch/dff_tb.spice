@@ -1,0 +1,58 @@
+** sch_path: /home/tare/Documents/sar_adc/dff_tb.sch
+**.subckt dff_tb
+V1 D GND pulse(0 VDD 0 TRF TRF {3*TCLK} {4*TCLK})
+V2 CLK GND pulse(0 VDD {TCLK/4} TRF TRF {TCLK/2} {TCLK})
+V4 SET GND pulse(0 VDD 0 TRF TRF {3*TCLK} {16*TCLK})
+V3 RST GND pulse(0 VDD {8*TCLK} TRF TRF {3*TCLK} {16*TCLK})
+x1 D CLK SET RST Q QB dff
+**** begin user architecture code
+
+
+*parameters
+.param VDD=2 VCC=VDD
+.param TRF=1n TCLK=100n
+.param TSTOP={20*TCLK} TDROP=0
+
+*analysis setup and control statements
+.tran 1n {TSTOP} {TDROP}
+
+*save all voltages and currents
+.save all
+
+
+
+.include /home/tare/pdk/gf180mcuC/libs.tech/ngspice/design.ngspice
+.lib /home/tare/pdk/gf180mcuC/libs.tech/ngspice/sm141064.ngspice typical
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  /home/tare/Documents/sar_adc/dff.sym # of pins=6
+** sym_path: /home/tare/Documents/sar_adc/dff.sym
+** sch_path: /home/tare/Documents/sar_adc/dff.sch
+.subckt dff D CLK SET RESET Q QB
+*.ipin D
+*.opin Q
+*.ipin CLK
+*.ipin SET
+*.ipin RESET
+*.opin QB
+**** begin user architecture code
+
+
+*nor model
+a1 D CLK SET RESET OUT OUTI my_dff
+.model my_dff d_dff(clk_delay = 13.0e-9 set_delay = 25.0e-9
++                  reset_delay = 27.0e-9 ic = 2 rise_delay = 10.0e-9
++                  fall_delay = 3e-9)
+
+*force netlisting of digital outputs
+v1 OUT Q 0
+v2 OUTI QB 1
+
+
+**** end user architecture code
+.ends
+
+.GLOBAL GND
+.end

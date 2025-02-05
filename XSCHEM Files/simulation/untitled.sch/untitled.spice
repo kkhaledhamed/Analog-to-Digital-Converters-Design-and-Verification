@@ -1,0 +1,32 @@
+** sch_path: /home/tare/sar_adc/untitled.sch
+**.subckt untitled
+V1 VINP GND pwl(0 0 10n VCC 20n 0 30n VCC)
+V2 VINN GND 1
+x1 VOUTP VINP VOUTN VINN comperator
+**** begin user architecture code
+
+
+.param VCC=2
+.tran 1n 30n
+.save all
+
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  /home/tare/sar_adc/comperator.sym # of pins=4
+** sym_path: /home/tare/sar_adc/comperator.sym
+** sch_path: /home/tare/sar_adc/comperator.sch
+.subckt comperator VOUTP VINP VOUTN VINN
+*.ipin VINP
+*.opin VOUTP
+*.ipin VINN
+*.opin VOUTN
+V1 VINPi VINP 0
+V2 VINNi VINN 0
+B2 VOUTN GND V = {VCC/2 + VCC/2 *(tanh(V(VINPi,VINNi)*1e6*-1))}
+B1 VOUTP GND V = {VCC/2 + VCC/2 *(tanh(V(VINPi,VINNi)*1e6))}
+.ends
+
+.GLOBAL GND
+.end
