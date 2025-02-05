@@ -13,8 +13,6 @@ This repository contains the design and verification of a Successive Approximati
 
 - Performance Metrics
 
-- Results
-
 - Software uesd
 
 - Contributors
