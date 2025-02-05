@@ -15,6 +15,8 @@ This repository contains the design and verification of a Successive Approximati
 
 - Results
 
+- Software uesd
+
 - Contributors
 
 ## Introduction
@@ -73,11 +75,11 @@ The system performance was evaluated using several key metrics:
 
 - Signal Power : -9 dB
 
-# Software used:
+## Software used:
 - OCTAVE
 - XSCHEM
 
-Contributors
+## Contributors
 
 ### Khaled Ahmed Hamed
 
