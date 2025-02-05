@@ -1,4 +1,8 @@
 # SAR ADC DESIGN & VERIFICATION
+
+![Block-diagram-of-typical-SAR-ADC](https://github.com/user-attachments/assets/7b755d1f-1f9b-40cb-8740-53f457f404dc)
+
+
 ## Project Overview
 
 This repository contains the design and verification of a Successive Approximation Register (SAR) Analog-to-Digital Converter (ADC). The project was conducted as part of the ADC Winter 2025 Training under the supervision of Dr. Hesham Omran.
