@@ -73,6 +73,9 @@ The system performance was evaluated using several key metrics:
 
 - Signal Power : -9 dB
 
+# Software used:
+- OCTAVE
+- XSCHEM
 
 Contributors
 
