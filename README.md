@@ -7,8 +7,6 @@ This repository contains the design and verification of a Successive Approximati
 
 - Introduction
 
-- Project Structure
-
 - Design Components
 
 - Verification
@@ -22,23 +20,6 @@ This repository contains the design and verification of a Successive Approximati
 ## Introduction
 
 The SAR ADC is a type of analog-to-digital converter that uses a binary search algorithm to approximate an input signal. This project implements and verifies a SAR ADC using behavioral modeling, digital logic design, and circuit simulations.
-
-## Project Structure
-
-📂 SAR_ADC_Design_Verification
-├── 📁 Behavioral_Models
-│   ├── Inverter
-│   ├── NAND
-│   ├── NOR
-│   ├── D_Flip_Flop
-├── 📁 SAR_Logic
-├── 📁 Transmission_Gate
-├── 📁 SAR_ADC_Design
-├── 📁 Testbenches
-├── 📁 Results
-│   ├── DC_Test_Results
-│   ├── Sine_Wave_Test_Results
-├── README.md
 
 ## Design Components
 
