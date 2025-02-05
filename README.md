@@ -1,1 +1,105 @@
-# Analog-to-Digital-Converters-Design-and-Verification
+# SAR ADC DESIGN & VERIFICATION
+## Project Overview
+
+This repository contains the design and verification of a Successive Approximation Register (SAR) Analog-to-Digital Converter (ADC). The project was conducted as part of the ADC Winter 2025 Training under the supervision of Dr. Hesham Omran.
+
+## Table of Contents
+
+- Introduction
+
+- Project Structure
+
+- Design Components
+
+- Verification
+
+- Performance Metrics
+
+- Results
+
+- Contributors
+
+## Introduction
+
+The SAR ADC is a type of analog-to-digital converter that uses a binary search algorithm to approximate an input signal. This project implements and verifies a SAR ADC using behavioral modeling, digital logic design, and circuit simulations.
+
+## Project Structure
+
+📂 SAR_ADC_Design_Verification
+├── 📁 Behavioral_Models
+│   ├── Inverter
+│   ├── NAND
+│   ├── NOR
+│   ├── D_Flip_Flop
+├── 📁 SAR_Logic
+├── 📁 Transmission_Gate
+├── 📁 SAR_ADC_Design
+├── 📁 Testbenches
+├── 📁 Results
+│   ├── DC_Test_Results
+│   ├── Sine_Wave_Test_Results
+├── README.md
+
+## Design Components
+
+### Behavioral Models
+
+- Inverter
+
+- NAND Gate
+
+- NOR Gate
+
+- D Flip-Flop
+
+### SAR Logic
+
+- Comparator
+
+- SAR Control Logic
+
+- Capacitive DAC
+
+- Transmission Gate
+
+### SAR ADC Design
+
+- Complete SAR ADC Circuit
+
+- Final Testbench
+
+## Verification
+
+The design has been verified using functional tests and signal integrity analysis. The verification includes:
+
+- DC Functional Test
+
+- Sine Wave Test
+
+## Performance Metrics
+
+The system performance was evaluated using several key metrics:
+
+- Effective Number of Bits (ENOB): 7.8 bits
+
+- Signal-to-Noise and Distortion Ratio (SINAD): 56.4 dB
+
+- Signal-to-Noise Ratio (SNR): 49.5 dB
+
+- Spurious-Free Dynamic Range (SFDR): 48.7 dB
+
+- Total Harmonic Distortion (THD): -56.4 dB
+
+- Signal Power : -9 dB
+
+
+Contributors
+
+### Khaled Ahmed Hamed
+
+### Supervised by Dr. Hesham Omran
+
+License
+
+### Siemens ADCs Training
+
