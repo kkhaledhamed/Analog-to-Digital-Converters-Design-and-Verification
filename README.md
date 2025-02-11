@@ -5,7 +5,7 @@
 
 ## Project Overview
 
-This repository contains the design and verification of a Successive Approximation Register (SAR) Analog-to-Digital Converter (ADC). The project was conducted as part of the ADC Winter 2025 Training under the supervision of Dr. Hesham Omran.
+This repository contains the design and verification of a Successive Approximation Register (SAR) Analog-to-Digital Converter (ADC). The project was conducted as part of the ADC Winter 2025 Siemens Training under the supervision of Dr. Hesham Omran.
 
 ## Table of Contents
 
